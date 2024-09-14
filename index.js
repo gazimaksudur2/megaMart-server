@@ -29,7 +29,7 @@ const verifyToken = (req, res, next)=>{
     const token = req.cookies.token;
     // console.log("token in the middleware ", token);
     if(!token){
-        req.status(401).send({message: "Unauthorized Access!!"});
+        res.status(401).send({message: "Unauthorized Access!!"});
     }else{
         jwt.verify(token, process.env.SECRET_ACCESS_TOKEN, (err, decoded)=>{
             if(err){
@@ -49,7 +49,9 @@ const logger = (req, res, next)=> {
 // require('crypto').randomBytes(64).toString('hex') generate secret access key
 app.post('/jwt', (req, res)=>{
     const user = req.body;
-    const token = jwt.sign({user},process.env.SECRET_ACCESS_TOKEN,{expiresIn: '1h'});
+    const token = jwt.sign(user , process.env.SECRET_ACCESS_TOKEN, {expiresIn: '1h'});
+    // console.log(token);
+
     res
     .cookie('token', token, {
         httpOnly: true,
@@ -100,6 +102,8 @@ async function run() {
 
         app.get('/user', verifyToken, async(req, res)=>{
             // const id = req.query.id;
+            // console.log(req?.body);
+            console.log(req?.user);
             let filter = null;
             if(req?.query?.id){
                 filter = {_id: new ObjectId(req?.query?.id)}
