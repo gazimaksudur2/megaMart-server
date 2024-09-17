@@ -86,6 +86,8 @@ async function run() {
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
         const productsCollection = client.db('megaMart').collection('products');
+        const categoriesCollection = client.db('megaMart').collection('categories');
+        const brandsCollection = client.db('megaMart').collection('brands');
         const usersCollection = client.db('megaMart').collection('users');
 
         app.post('/users', async(req, res)=>{
@@ -95,7 +97,7 @@ async function run() {
             res.send(result);
         });
 
-        app.get('/users', async(req, res)=>{
+        app.get('/users', verifyToken, async(req, res)=>{
             const result = await usersCollection.find().toArray();
             res.send(result);
         })
@@ -103,7 +105,7 @@ async function run() {
         app.get('/user', verifyToken, async(req, res)=>{
             // const id = req.query.id;
             // console.log(req?.body);
-            console.log(req?.user);
+            // console.log(req?.user);
             let filter = null;
             if(req?.query?.id){
                 filter = {_id: new ObjectId(req?.query?.id)}
@@ -115,6 +117,68 @@ async function run() {
                 res.send('user query not found.')
             }
             const result = await usersCollection.findOne(filter) || {user: 'user not found'};
+            res.send(result);
+        });
+
+        app.get('/findUser', async(req, res)=>{
+            let filter = null;
+            if(req?.query?.id){
+                filter = {_id: new ObjectId(req?.query?.id)}
+            }else if(req?.query?.email){
+                filter = {email: req.query.email}
+            }else if(req?.query?.username){
+                filter = {username: req.query.username};
+            }else{
+                // res.send('user query not found.')
+                res.send({found: false});
+            }
+            const result = await usersCollection.findOne(filter) || {userNone: true};
+            res.send({found: result?.userNone ? false : true});
+        });
+
+        app.get('/categories', async(req, res)=>{
+            const cursor = categoriesCollection.find();
+            const categories = await cursor.toArray();
+            res.send(categories);
+        });
+
+        app.post('/brands', async(req, res)=>{
+            const brand = req.body;
+            const result = await brandsCollection.insertOne(brand);
+            // console.log(result);
+            res.send(result);
+        });
+
+        app.get('/brands', verifyToken, async(req, res)=>{
+            const query = req.query;
+            const result = await brandsCollection.find(query).toArray();
+            // console.log(query, result);
+            res.send(result);
+        });
+
+        app.patch('/brands', verifyToken, async(req, res)=>{
+            const filter = {_id: new ObjectId(req?.query?.id)};
+            const data = req.body;
+            const brand = await brandsCollection.findOne(filter);
+            const category = await categoriesCollection.findOne({category: brand?.category});
+            const brands = category?.brands;
+            if(data?.status === 'approved'){
+                if(!brand?.categorized){
+                    const doc = {
+                        $set: {categorized: true}
+                    }
+                    const newBrands = brands?.length ? [...brands, brand] : [brand];
+                    await categoriesCollection.updateOne({category: brand?.category}, {$set: {brands: newBrands}});
+                    await brandsCollection.updateOne(filter, doc);
+                    // console.log(newBrands);
+                }
+            }
+            const updatedDoc = {
+                $set: {...data}
+            }
+            const result = await brandsCollection.updateOne(filter, updatedDoc);
+            // console.log(result);
+            // res.send({success: true});
             res.send(result);
         });
 
