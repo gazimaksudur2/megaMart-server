@@ -1,16 +1,21 @@
 const { ObjectId } = require("mongodb");
-const { getReviewsCollection, getProductsCollection } = require("../db/mongoDB");
+const connectDB = require("../db/mongoDB");
 
 async function handleGetReviews(req, res) {
-    const result = await getReviewsCollection().find().toArray();
+    const db = await connectDB();
+    const reviewsCollection = await db.collection('reviews');
+    const result = await reviewsCollection.find().toArray();
     res.status(200).send(result);
 }
 
 async function handleSetReview(req, res) {
+    const db = await connectDB();
+    const reviewsCollection = await db.collection('reviews');
+    const productsCollection = await db.collection('products');
     const review = req?.body;
     const filter = { _id: new ObjectId(review?.product_id) };
-    const result = await getReviewsCollection().insertOne(review);
-    const product = await getProductsCollection().findOne(filter);
+    const result = await reviewsCollection.insertOne(review);
+    const product = await productsCollection.findOne(filter);
     const updatedDoc = {
         $set: {
             reviews: [...product?.reviews, {
@@ -22,7 +27,7 @@ async function handleSetReview(req, res) {
             }]
         }
     }
-    const result2 = await getProductsCollection().updateOne(filter, updatedDoc);
+    const result2 = await productsCollection.updateOne(filter, updatedDoc);
     // console.log(product, result);
     res.send(result);
 }

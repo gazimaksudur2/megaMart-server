@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { getUsersCollection } = require("../db/mongoDB");
+require('dotenv').config();
 
 function verifyToken (req, res, next) {
     const token = req.cookies.token;

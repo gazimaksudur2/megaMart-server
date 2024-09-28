@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+require('dotenv').config();
 
 function jwtLogin(req, res) {
     // res.send("you are in jsonwebtoken login route")

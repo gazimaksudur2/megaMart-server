@@ -1,23 +1,31 @@
 const { ObjectId } = require("mongodb");
-const { getProductsCollection } = require("../db/mongoDB");
+const connectDB = require("../db/mongoDB");
 
 async function handleGetProducts(req, res) {
-    const result = await getProductsCollection().find().toArray();
+    const db = await connectDB();
+    const productsCollection = await db.collection('products');
+    const result = await productsCollection.find().toArray();
     res.status(200).send(result);
 }
 
 async function handleGetProduct(req, res) {
-    const result = await getProductsCollection().findOne({_id: new ObjectId(req.params.id)})
+    const db = await connectDB();
+    const productsCollection = await db.collection('products');
+    const result = await productsCollection.findOne({_id: new ObjectId(req.params.id)})
     res.status(200).send(result);
 }
 
 async function handleSetProduct(req, res) {
-    const result = await getProductsCollection().insertOne(req.body);
+    const db = await connectDB();
+    const productsCollection = await db.collection('products');
+    const result = await productsCollection.insertOne(req.body);
     res.status(200).send(result);
 }
 
 async function handleDeleteProduct(req, res) {
-    const result = await getProductsCollection().deleteOne({_id: new ObjectId(req.params.id)});
+    const db = await connectDB();
+    const productsCollection = await db.collection('products');
+    const result = await productsCollection.deleteOne({_id: new ObjectId(req.params.id)});
     res.status(200).send(result);
 }
 
