@@ -11,15 +11,17 @@ const { reviewsRouter } = require('./routers/reviews');
 const { questionsRouter } = require('./routers/questions');
 const { jwtRouter } = require('./routers/token');
 const { cartsRouter } = require('./routers/carts');
+const { ordersRouter } = require('./routers/orders');
 const port = process.env.PORT || 5000;
 
 app.use(express.json());
-app.use(cors({
-    origin: [
-        'http://localhost:5173',
-    ],
-    credentials: true,
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Specify the allowed origin
+    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+  })
+);
+
 app.use(cookieParser());
 
 
@@ -35,6 +37,7 @@ app.use('/products', productsRouter);
 app.use('/reviews', reviewsRouter);
 app.use('/questions', questionsRouter);
 app.use('/carts', cartsRouter);
+app.use('/orders', ordersRouter);
 
 
 
