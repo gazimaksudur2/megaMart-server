@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -9,7 +10,6 @@ const { productsRouter } = require('./routers/products');
 const { reviewsRouter } = require('./routers/reviews');
 const { questionsRouter } = require('./routers/questions');
 const { jwtRouter } = require('./routers/token');
-require('dotenv').config();
 const port = process.env.PORT || 5000;
 
 app.use(express.json());

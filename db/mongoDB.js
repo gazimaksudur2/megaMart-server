@@ -1,8 +1,10 @@
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
 
-// const uri = "mongodb+srv://<db_username>:<db_password>@cluster0.oknyghy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-const uri = "mongodb://localhost:27017";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.oknyghy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+// const uri = "mongodb://127.0.0.1:27017/";
+
+// console.log(uri);
 
 const client = new MongoClient(uri, {
     serverApi: {
@@ -12,7 +14,7 @@ const client = new MongoClient(uri, {
     }
 });
 
-let usersCollection, productsCollection, categoriesCollection, brandsCollection, reviewsCollection, questionsCollection;
+// let usersCollection, productsCollection, categoriesCollection, brandsCollection, reviewsCollection, questionsCollection;
 
 async function run() {
     try {
@@ -22,14 +24,14 @@ async function run() {
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
-        const database = client.db("megaMart");
+        // const database = client.db("megaMart");
 
-        productsCollection = database.collection('products');
-        categoriesCollection = database.collection('categories');
-        brandsCollection = database.collection('brands');
-        reviewsCollection = database.collection('reviews');
-        questionsCollection = database.collection('questions');
-        usersCollection = database.collection('users');
+        // productsCollection = database.collection('products');
+        // categoriesCollection = database.collection('categories');
+        // brandsCollection = database.collection('brands');
+        // reviewsCollection = database.collection('reviews');
+        // questionsCollection = database.collection('questions');
+        // usersCollection = database.collection('users');
     } finally {
         // Ensures that the client will close when you finish/error
         // await client.close();
@@ -38,10 +40,11 @@ async function run() {
 run().catch(console.dir);
 
 module.exports = {
-    getUsersCollection: () => usersCollection,
-    getProductsCollection: ()=> productsCollection,
-    getCategoriesCollection: ()=> categoriesCollection,
-    getReviewsCollection: ()=> reviewsCollection,
-    getBrandsCollection: ()=> brandsCollection,
-    getQuestionsCollection: ()=> questionsCollection
+    // getUsersCollection: () => usersCollection,
+    // getProductsCollection: ()=> productsCollection,
+    // getCategoriesCollection: ()=> categoriesCollection,
+    // getReviewsCollection: ()=> reviewsCollection,
+    // getBrandsCollection: ()=> brandsCollection,
+    // getQuestionsCollection: ()=> questionsCollection
+    client
 }

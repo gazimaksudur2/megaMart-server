@@ -1,14 +1,17 @@
-const { getQuestionsCollection } = require("../db/mongoDB");
+// const { getQuestionsCollection } = require("../db/mongoDB");
+const { client } = require("../db/mongoDB");
+
+const questionsCollection = client.db("megaMart").collection("questions");
 
 async function handleGetQuestions(req, res) {
-    const result = await getQuestionsCollection().find().toArray();
+    const result = await questionsCollection.find().toArray();
     res.status(200).send(result);
 }
 
 async function handleSetQuestion(req, res) {
     const question = req?.body;
     const filter = { _id: new ObjectId(question?.product_id) };
-    const result = await getQuestionsCollection().insertOne(question);
+    const result = await questionsCollection.insertOne(question);
     const product = await getProductsCollection().findOne(filter);
     const updatedDoc = {
         $set: {

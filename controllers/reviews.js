@@ -1,5 +1,9 @@
 const { ObjectId } = require("mongodb");
-const { getReviewsCollection, getProductsCollection } = require("../db/mongoDB");
+// const { getReviewsCollection, getProductsCollection } = require("../db/mongoDB");
+const { client } = require("../db/mongoDB");
+
+const reviewsCollection = client.db("megaMart").collection("reviews");
+const productsCollection = client.db("megaMart").collection("products");
 
 async function handleGetReviews(req, res) {
     const result = await getReviewsCollection().find().toArray();
