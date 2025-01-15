@@ -45,10 +45,18 @@ async function handleDelete(req, res) {
     res.send(result);
 }
 
+async function handlePatchSellerRequest(req, res) {
+    const id = req?.query?.id;
+    const sellerRequest = req?.body;
+    const result = await usersCollection.updateOne({email: id}, {$set: sellerRequest});
+    res.send(result);
+}
+
 module.exports = {
     handleGetAllUsers,
     handleSetUser,
     handleGetUser,
     handleUpdateUser,
     handleDelete,
+    handlePatchSellerRequest
 }
