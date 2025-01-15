@@ -10,6 +10,7 @@ const { productsRouter } = require('./routers/products');
 const { reviewsRouter } = require('./routers/reviews');
 const { questionsRouter } = require('./routers/questions');
 const { jwtRouter } = require('./routers/token');
+const { cartsRouter } = require('./routers/carts');
 const port = process.env.PORT || 5000;
 
 app.use(express.json());
@@ -33,6 +34,7 @@ app.use('/brands', brandsRouter);
 app.use('/products', productsRouter);
 app.use('/reviews', reviewsRouter);
 app.use('/questions', questionsRouter);
+app.use('/carts', cartsRouter);
 
 
 

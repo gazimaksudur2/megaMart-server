@@ -8,7 +8,10 @@ async function handleGetAllUsers (req, res) {
     // if (applicant?.email != 'megamart@gmail.com') {
     //     res.status(403).send('Forbidden Access!!');
     // }
-    const result = await usersCollection.find().toArray();
+    let result = {success: false};
+    if(req?.query?.email){
+        result = await usersCollection.findOne({email: req.query.email});
+    } else result = await usersCollection.find().toArray();
     res.send(result);
     // res.send({"result": true});
 }
