@@ -23,15 +23,6 @@ async function run() {
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
-
-        // const database = client.db("megaMart");
-
-        // productsCollection = database.collection('products');
-        // categoriesCollection = database.collection('categories');
-        // brandsCollection = database.collection('brands');
-        // reviewsCollection = database.collection('reviews');
-        // questionsCollection = database.collection('questions');
-        // usersCollection = database.collection('users');
     } finally {
         // Ensures that the client will close when you finish/error
         // await client.close();
@@ -40,11 +31,6 @@ async function run() {
 run().catch(console.dir);
 
 module.exports = {
-    // getUsersCollection: () => usersCollection,
-    // getProductsCollection: ()=> productsCollection,
-    // getCategoriesCollection: ()=> categoriesCollection,
-    // getReviewsCollection: ()=> reviewsCollection,
-    // getBrandsCollection: ()=> brandsCollection,
-    // getQuestionsCollection: ()=> questionsCollection
-    client
+    client,
+    run
 }
