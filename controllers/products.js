@@ -6,10 +6,13 @@ const productsCollection = client.db("megaMart").collection("products");
 
 async function handleGetProducts(req, res) {
     const id = req.query?.id;
+    const seller = req.query?.seller;
     let result = {success: true};
     if(id){
         result = await productsCollection.findOne({ _id: new ObjectId(id) });
-    }else result = await productsCollection.find().toArray();
+    }else if(seller) {
+        result = await productsCollection.find({seller_mail: seller}).toArray();
+    } else result = await productsCollection.find().toArray();
     res.status(200).send(result);
 }
 
@@ -29,9 +32,19 @@ async function handleDeleteProduct(req, res) {
     res.status(200).send(result);
 }
 
+async function handlePatchProducts(req, res) {
+    const id = req.query?.id;
+    const result = await productsCollection.updateOne({_id: new ObjectId(id)}, {$set: {
+            ...req.body
+        }
+    });
+    res.send(result);
+}
+
 module.exports = {
     handleGetProducts,
     handleSetProduct,
     handleDeleteProduct,
     handleGetProduct,
+    handlePatchProducts,
 }

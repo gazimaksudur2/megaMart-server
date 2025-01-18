@@ -18,7 +18,12 @@ const port = process.env.PORT || 5000;
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:5173", // Specify the allowed origin
+    origin: [
+      "http://localhost:5173",
+      "https://easybank-b9b62.web.app",
+      "https://ecommerce-26ce6.web.app", "*"
+    ], // Specify the allowed origin
+    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
   })
 );
 
